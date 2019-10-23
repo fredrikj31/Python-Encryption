@@ -1,29 +1,28 @@
 from cryptography.fernet import Fernet
 
-message = "my deep dark secret".encode()
-
 def getKey():
 	file = open('key.key', 'rb')
 	key = file.read()
 	file.close()
-	return key
+	
+	f = Fernet(key)
+	return f
 
 def encryptFile():
 	OpenFile = input("What file should be encrypted? >> ")
 
 	print(OpenFile)
 
-	f = Fernet(getKey())
-
 	try:
 		file = open(OpenFile, 'r')
 		TextFile = file.read()
 		print(TextFile)
 
-		encryptedText = f.encrypt(TextFile)
+		encryptedText = getKey().encrypt(TextFile.encode())
 
 		fileNameExtension = OpenFile.split('.', 1)[0]
 		newFileName = fileNameExtension + "-Encrypted" + ".txt"
+		print(newFileName)
 		createFile = open(newFileName, 'wb')
 		createFile.write(encryptedText)
 		createFile.close()
@@ -32,10 +31,36 @@ def encryptFile():
 		print("File not found!")
 
 def decryptFile():
-	f = Fernet(getKey())
-	encrypted = b"gAAAAABdrzbL-eRX8LhDZZyXzXjQfw5yYYUTKjDTNHjqP0DRNVeZWBfO5TSyFumhEMfGLb8eA1YBKabba1fUAkPPr6WQd5aZVVZ1ppdHXBKkEsZrgstOlIM="
-	decrypted = f.decrypt(encrypted)
+	OpenFile = input("What file should be decrypted? >> ")
 
-	print(decrypted.decode())
+	print(OpenFile)
 
-encryptFile()
+	try:
+		file = open(OpenFile, 'r')
+		TextFile = file.read()
+		print(TextFile)
+
+		decryptedText = getKey().decrypt(TextFile.encode())
+
+		print(decryptedText.decode())
+
+		fileNameExtension = OpenFile.split('-Encrypted', 1)[0]
+		newFileName = fileNameExtension + "-Decrypted" + ".txt"
+		print(newFileName)
+		createFile = open(newFileName, 'w')
+		createFile.write(decryptedText.decode())
+		createFile.close()
+
+	except IOError:
+		print("File not found!")
+
+if __name__ == "__main__":
+	print("Welcome to file encryption!")
+	print("Please select to encrypt or decrypt a file")
+	choose = input("Type (e) for encrypt and (d) for decrypt >> ")
+	if choose == "e":
+		encryptFile()
+	elif choose == "d":
+		decryptFile()
+	else:
+		print("Could not understand that character :(")
