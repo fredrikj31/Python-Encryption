@@ -29,5 +29,8 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Please make sure to update tests as appropriate.
 
+# Future Features
+There will come some updates where you can encrypt and decrypt other files like images and other files.
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
